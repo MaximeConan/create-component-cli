@@ -42,6 +42,6 @@ module.exports = async () => {
 
 
   } catch (err) {
-    console.error(`Error during creation: ${err.message}`)
+    console.log(`Error during creation: ${err.message}`)
   }
 }
