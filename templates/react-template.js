@@ -1,5 +1,7 @@
 const componentTemplate = (componentName, props = []) => {
 
+  console.log('PROPS', props)
+
   let template = ''
 
   props.length === 0
