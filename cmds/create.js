@@ -73,9 +73,7 @@ module.exports = async () => {
     const { propType } = await askPropType()
     const { defaultProp } = await askDefaultProp(propType)
 
-    const props = [].push({ propName, propType, defaultProp })
-
-    console.log('props', props)
+    const props = [{ propName, propType, defaultProp }]
 
     console.log({ propName, propType, defaultProp })
 

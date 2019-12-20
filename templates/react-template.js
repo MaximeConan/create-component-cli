@@ -25,11 +25,11 @@ const componentTemplate = (componentName, props = []) => {
     const ${componentName} = ({ ${props.map(prop => `${prop.propName}`)} }) => <div>${componentName}</div>
 
     ${componentName}.propTypes = {
-      ${props.map(prop => `${prop.propName}: PropTypes.${prop.propTypes}.isRequired`)}
+      ${props.map(prop => `${prop.propName}: PropTypes.${prop.propType}.isRequired`)}
     }
     
     ${componentName}.defaultProps = {
-      ${props.map(prop => `${prop.propName}: ${prop.defaultProps}`)}
+      ${props.map(prop => `${prop.propName}: ${prop.defaultProp}`)}
     }
 
     export default ${componentName}
