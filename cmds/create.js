@@ -13,54 +13,58 @@ const askComponentName = () => {
   return inquirer.prompt(componentName)
 }
 
-const askPropName = () => {
-  const propName = [{
-    name: 'propName',
-    type: 'input',
-    message: 'Enter your prop name'
-  }]
+const askPropType = async (inputs = []) => {
+  const prompts = [
+    {
+      name: 'propName',
+      type: 'input',
+      message: 'Enter your prop name'
+    },
+    {
+      name: 'propType',
+      type: 'list',
+      choices: ['Object', 'Array', 'String', 'Number', 'Boolean'],
+      message: 'Enter your prop type'
+    },
+    {
+      type: 'confirm',
+      name: 'again',
+      message: 'Enter another input? ',
+      default: true
+    }
+  ]
 
-  return inquirer.prompt(propName)
+  let { again, ...answers } = await inquirer.prompt(prompts);
+
+  const defaultProps = resolveDefaultProp(answers.defaultProps)
+
+  answers = { ...answers, defaultProps }
+
+  const newInputs = [...inputs, answers];
+  return again ? askPropType(newInputs) : newInputs;
 }
 
-const askPropType = () => {
-  const propType = [{
-    name: 'propType',
-    type: 'list',
-    choices: ['Object', 'Array', 'String', 'Number'],
-    message: 'Enter your prop type'
-  }]
 
-  return inquirer.prompt(propType)
-}
-
-const askDefaultProp = propType => {
-  const defaultProp = [{
-    name: 'defaultProp',
-    type: 'list',
-    choices: resolveDefaultProp(propType),
-    message: 'Enter your default prop'
-  }]
-
-  return inquirer.prompt(defaultProp)
-}
 
 const resolveDefaultProp = propType => {
   switch (propType) {
     case 'Object':
-      return ['{}', 'null']
+      return '{}'
 
     case 'Array':
-      return ['[]', 'null']
+      return '[]'
 
     case 'String':
-      return ['""', 'null']
+      return 'null'
 
     case 'Number':
-      return ['0', 'null']
+      return 'null'
+
+    case 'Boolean':
+      return 'false'
 
     default:
-      return ['null']
+      return 'null'
   }
 }
 
@@ -69,13 +73,8 @@ module.exports = async () => {
     const { componentName } = await askComponentName()
     const capitalizeComponentName = componentName.charAt(0).toUpperCase() + componentName.slice(1)
 
-    const { propName } = await askPropName()
-    const { propType } = await askPropType()
-    const { defaultProp } = await askDefaultProp(propType)
-
-    const props = [{ propName, propType, defaultProp }]
-
-    console.log({ propName, propType, defaultProp })
+    const props = await askPropType()
+    console.log(props)
 
     fs.mkdirSync(`${MODULES_PATH}/${capitalizeComponentName}`, { recursive: true })
     fs.writeFile(`${MODULES_PATH}/${capitalizeComponentName}/${capitalizeComponentName}.js`, templates.componentTemplate(capitalizeComponentName, props), () => console.log(`${capitalizeComponentName} has been successfully created !`))

@@ -22,14 +22,14 @@ const componentTemplate = (componentName, props = []) => {
 
     import * as Styled from './__styles__/${componentName}.styles.js'
 
-    const ${componentName} = ({ ${props.map(prop => `${prop.propName}`)} }) => <div>${componentName}</div>
+    const ${componentName} = ({ ${props.map(prop => ` ${prop.propName}`)} }) => <div>${componentName}</div>
 
     ${componentName}.propTypes = {
-      ${props.map(prop => `${prop.propName}: PropTypes.${prop.propType}.isRequired`)}
+      ${props.map(prop => `${prop.propName}: PropTypes.${prop.propType}.isRequired \n`)}
     }
     
     ${componentName}.defaultProps = {
-      ${props.map(prop => `${prop.propName}: ${prop.defaultProp}`)}
+      ${props.map(prop => `${prop.propName}: ${prop.defaultProps} \n`)}
     }
 
     export default ${componentName}
