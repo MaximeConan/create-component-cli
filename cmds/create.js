@@ -2,6 +2,7 @@ const inquirer = require('inquirer');
 const fs = require('fs')
 const templates = require('../templates/react-template')
 
+const { formatComponentName } = require('../utils/stringFormat')
 const { MODULES_PATH } = require('../utils/constants')
 
 const askComponentName = () => {
@@ -71,19 +72,18 @@ const resolveDefaultProp = propType => {
 module.exports = async () => {
   try {
     const { componentName } = await askComponentName()
-    const capitalizeComponentName = componentName.charAt(0).toUpperCase() + componentName.slice(1)
+    const formattedComponentName = formatComponentName(componentName)
 
     const props = await askPropType()
-    console.log(props)
 
-    fs.mkdirSync(`${MODULES_PATH}/${capitalizeComponentName}`, { recursive: true })
-    fs.writeFile(`${MODULES_PATH}/${capitalizeComponentName}/${capitalizeComponentName}.js`, templates.componentTemplate(capitalizeComponentName, props), () => console.log(`${capitalizeComponentName} has been successfully created !`))
+    fs.mkdirSync(`${MODULES_PATH}/${formattedComponentName}`, { recursive: true })
+    fs.writeFile(`${MODULES_PATH}/${formattedComponentName}/${formattedComponentName}.js`, templates.componentTemplate(formattedComponentName, props), () => console.log(`${formattedComponentName} has been successfully created !`))
 
-    fs.mkdirSync(`${MODULES_PATH}/${capitalizeComponentName}/__test__`, { recursive: true })
-    fs.writeFile(`${MODULES_PATH}/${capitalizeComponentName}/__test__/${capitalizeComponentName}.test.js`, templates.testTemplate(capitalizeComponentName), () => console.log(`${capitalizeComponentName}/__test__/${capitalizeComponentName}.js has been successfully created !`))
+    fs.mkdirSync(`${MODULES_PATH}/${formattedComponentName}/__test__`, { recursive: true })
+    fs.writeFile(`${MODULES_PATH}/${formattedComponentName}/__test__/${formattedComponentName}.test.js`, templates.testTemplate(formattedComponentName), () => console.log(`${formattedComponentName}/__test__/${formattedComponentName}.js has been successfully created !`))
 
-    fs.mkdirSync(`${MODULES_PATH}/${capitalizeComponentName}/__styles__`, { recursive: true })
-    fs.writeFile(`${MODULES_PATH}/${capitalizeComponentName}/__styles__/${capitalizeComponentName}.styles.js`, templates.styleTemplate(), () => console.log(`${capitalizeComponentName}/__styles__/${capitalizeComponentName}.js has been successfully created !`))
+    fs.mkdirSync(`${MODULES_PATH}/${formattedComponentName}/__styles__`, { recursive: true })
+    fs.writeFile(`${MODULES_PATH}/${formattedComponentName}/__styles__/${formattedComponentName}.styles.js`, templates.styleTemplate(), () => console.log(`${formattedComponentName}/__styles__/${formattedComponentName}.js has been successfully created !`))
 
 
   } catch (err) {
