@@ -1,10 +1,6 @@
 #!/usr/bin/env node
 const minimist = require('minimist')
 
-const createComponent = require('./cmds/create')
-const renameComponent = require('./cmds/rename')
-const deleteComponent = require('./cmds/delete')
-
 const error = require('./utils/error')
 
 const run = async () => {

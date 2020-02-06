@@ -2,6 +2,7 @@ const inquirer = require('inquirer')
 const chalk = require('chalk')
 const fs = require('fs')
 const rimraf = require('rimraf')
+const error = require('../utils/error')
 
 const { replaceAll } = require('../utils/replace')
 const { formatComponentName } = require('../utils/stringFormat')
@@ -53,6 +54,6 @@ module.exports = async () => {
     console.log(chalk.bgGreen.black(`Hooray! Component \`${formattedComponentToRename}\` has been successfully rename to \`${formattedNewComponentName}\``))
 
   } catch (err) {
-    console.log(`Error during renaming: ${err.message}`)
+    error(err.message, true)
   }
 }

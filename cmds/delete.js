@@ -1,5 +1,6 @@
 const inquirer = require('inquirer');
 const rimraf = require('rimraf')
+const error = require('../utils/error')
 
 const { formatComponentName } = require('../utils/stringFormat')
 const { MODULES_PATH } = require('../utils/constants')
@@ -23,6 +24,6 @@ module.exports = async () => {
 
     console.log(chalk.bgGreen.black(`Hooray! Component \`${formattedComponentToDelete}\` has been successfully deleted`))
   } catch (err) {
-    console.log(`Error during deleting: ${err.message}`)
+    error(err.message, true)
   }
 }

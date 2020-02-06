@@ -2,6 +2,7 @@ const inquirer = require('inquirer')
 const chalk = require('chalk')
 const fs = require('fs')
 const templates = require('../templates/react-template')
+const error = require('../utils/error')
 
 const { formatComponentName } = require('../utils/stringFormat')
 const { MODULES_PATH, TEMPLATES } = require('../utils/constants')
@@ -102,6 +103,6 @@ module.exports = async () => {
 
     console.log(chalk.bgGreen.black(`Hooray! Component \`${formattedComponentName}\` has been successfully created`))
   } catch (err) {
-    console.log(`Error during creation: ${err.message}`)
+    error(err.message, true)
   }
 }

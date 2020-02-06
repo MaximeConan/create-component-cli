@@ -1,25 +1,25 @@
 const menu = {
-  main: `
-		ljn-rm [command] <options>
+	main: `
+		create-component [command] <options>
 
-		create ........... create a module
-		rename ........... rename a module
-		delete ........... delete a module
+		create ........... create a component
+		rename ........... rename a component
+		delete ........... delete a component
 		version .......... show package version
 		help ............. show help menu for a command
 	`,
-  create: `
-		ljn-rm create [<name>]
+	create: `
+		create-component create
 	`,
-  rename: `
-		ljn-rm rename [<name>] [<new-name>]
+	rename: `
+		create-component rename
 	`,
-  delete: `
-		ljn-rm delete [<name>]
+	delete: `
+		create-component delete
 	`
 }
 
 module.exports = args => {
-  const subCmd = args._[0] === 'help' ? args._[1] : args._[0]
-  console.log(menu[subCmd] || menu.main)
+	const subCmd = args._[0] === 'help' ? args._[1] : args._[0]
+	console.log(menu[subCmd] || menu.main)
 }
