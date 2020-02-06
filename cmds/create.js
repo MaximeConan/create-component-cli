@@ -40,6 +40,10 @@ const askPropType = async (inputs = []) => {
 
   let { again, ...answers } = await inquirer.prompt(prompts);
 
+  if (isEmpty(answers.propName)) {
+    throw new Error(`You have to specify the name of the props you want to add`)
+  }
+
   const defaultProps = resolveDefaultProp(answers.propType)
 
   answers = { ...answers, defaultProps }

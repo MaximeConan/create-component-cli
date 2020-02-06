@@ -1,6 +1,7 @@
 const inquirer = require('inquirer');
 const fs = require('fs')
 const rimraf = require('rimraf')
+const chalk = require('chalk')
 const isEmpty = require('lodash/isEmpty')
 const error = require('../utils/error')
 
