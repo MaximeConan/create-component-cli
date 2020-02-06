@@ -1,5 +1,7 @@
 const inquirer = require('inquirer');
+const fs = require('fs')
 const rimraf = require('rimraf')
+const isEmpty = require('lodash/isEmpty')
 const error = require('../utils/error')
 
 const { formatComponentName } = require('../utils/stringFormat')
@@ -19,6 +21,14 @@ module.exports = async () => {
   try {
     const { componentToDelete } = await askComponentToDelete()
     const formattedComponentToDelete = formatComponentName(componentToDelete)
+
+    if (!fs.existsSync(`${MODULES_PATH}/${formattedComponentToDelete}`)) {
+      throw new Error(`Cannot find \`${MODULES_PATH}/${formattedComponentToDelete}\` folder`)
+    }
+
+    if (isEmpty(componentToDelete)) {
+      throw new Error(`You have to specify the name of the component you want to delete`)
+    }
 
     rimraf.sync(`${MODULES_PATH}/${formattedComponentToDelete}`)
 

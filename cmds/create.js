@@ -1,6 +1,7 @@
 const inquirer = require('inquirer')
 const chalk = require('chalk')
 const fs = require('fs')
+const isEmpty = require('lodash/isEmpty')
 const templates = require('../templates/react-template')
 const error = require('../utils/error')
 
@@ -90,10 +91,15 @@ module.exports = async () => {
     const { componentName } = await askComponentName()
     const formattedComponentName = formatComponentName(componentName)
 
+    if (isEmpty(componentName)) {
+      throw new Error(`You have to specify the name of the component you want to create`)
+    }
+
     const props = await askPropType()
 
     TEMPLATES.map(({ folder, file, template }) => {
       fs.mkdirSync(`${MODULES_PATH}/${formattedComponentName}${folder}`, { recursive: true })
+
       fs.writeFileSync(
         `${MODULES_PATH}/${formattedComponentName}${folder}${formattedComponentName}${file}`,
         resolveTemplate(template, formattedComponentName, props),

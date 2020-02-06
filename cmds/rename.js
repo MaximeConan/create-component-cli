@@ -3,6 +3,7 @@ const chalk = require('chalk')
 const fs = require('fs')
 const rimraf = require('rimraf')
 const error = require('../utils/error')
+const isEmpty = require('lodash/isEmpty')
 
 const { replaceAll } = require('../utils/replace')
 const { formatComponentName } = require('../utils/stringFormat')
@@ -33,8 +34,20 @@ module.exports = async () => {
     const { componentToRename } = await askComponentToRename()
     const formattedComponentToRename = formatComponentName(componentToRename)
 
+    if (!fs.existsSync(`${MODULES_PATH}/${formattedComponentToRename}`)) {
+      throw new Error(`Cannot find \`${MODULES_PATH}/${formattedComponentToRename}\` folder`)
+    }
+
+    if (isEmpty(componentToRename)) {
+      throw new Error(`You have to specify the name of the component you want to rename`)
+    }
+
     const { newComponentName } = await askNewComponentName()
     const formattedNewComponentName = formatComponentName(newComponentName)
+
+    if (isEmpty(newComponentName)) {
+      throw new Error(`You have to specify a new name for your component`)
+    }
 
     TEMPLATES.map(({ folder, file }) => {
       fs.mkdirSync(`${MODULES_PATH}/${formattedNewComponentName}${folder}`, { recursive: true })
@@ -46,6 +59,7 @@ module.exports = async () => {
 
       const str = fs.readFileSync(`${MODULES_PATH}/${formattedNewComponentName}${folder}${formattedNewComponentName}${file}`, { encoding: 'utf8' })
       const newStr = replaceAll(str, formattedNewComponentName, formattedComponentToRename)
+
       fs.writeFileSync(`${MODULES_PATH}/${formattedNewComponentName}${folder}${formattedNewComponentName}${file}`, newStr, { encoding: 'utf8' })
     })
 

@@ -1,6 +1,6 @@
 const menu = {
 	main: `
-		create-component [command] <options>
+		create-component [command]
 
 		create ........... create a component
 		rename ........... rename a component
