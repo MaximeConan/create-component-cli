@@ -7,64 +7,60 @@ const componentTemplate = (componentName, props = []) => {
   props.length === 0
     ? template =
     `
-    import React from 'react'
-    import * as Styled from './__styles__/${componentName}.styles.js'
-  
-    const ${componentName} = () => <div>${componentName}</div>
-  
-    export default ${componentName}
-    `
+import React from 'react'
+import * as Styled from './__styles__/${componentName}.styles.js'
+
+const ${componentName} = () => <div>${componentName}</div>
+
+export default ${componentName}
+`
 
     : template =
     `
-    import React from 'react'
-    import PropTypes from 'prop-types'
+import React from 'react'
+import PropTypes from 'prop-types'
 
-    import * as Styled from './__styles__/${componentName}.styles.js'
+import * as Styled from './__styles__/${componentName}.styles.js'
 
-    const ${componentName} = ({ ${props.map(prop => ` ${prop.propName}`)} }) => <div>${componentName}</div>
+const ${componentName} = ({ ${props.map(prop => ` ${prop.propName}`)} }) => <div>${componentName}</div>
 
-    ${componentName}.propTypes = {
-      ${props.map(prop => `${prop.propName}: PropTypes.${prop.propType}.isRequired \n`)}
-    }
-    
-    ${componentName}.defaultProps = {
-      ${props.map(prop => `${prop.propName}: ${prop.defaultProps} \n`)}
-    }
+${componentName}.propTypes = {
+  ${props.map((prop, index) => index === 0 ? `${prop.propName}: PropTypes.${prop.propType}.isRequired` : `\n  ${prop.propName}: PropTypes.${prop.propType}.isRequired`)}
+}
 
-    export default ${componentName}
-    `
+${componentName}.defaultProps = {
+  ${props.map((prop, index) => index === 0 ? `${prop.propName}: ${prop.defaultProps}` : `\n  ${prop.propName}: ${prop.defaultProps}`)}
+}
+
+export default ${componentName}
+`
 
   return template
 
 }
 
 const styleTemplate = () => {
-  return (
-    `
-    import styled from 'styled-component'
-    `
-  )
+  return (`import styled from 'styled-component'`)
 }
 
 const testTemplate = componentName => {
   return (
     `
-    import React from 'react'
-    import { render } from '@testing-library/react'
-  
-    import ${componentName} from '../${componentName}'
-  
-    const defaultProps = {}
-    const getInstance = (props = {}) => <${componentName} {...defaultProps} {...props} />
-  
-    describe('${componentName}', () => {
-      it('matches snapshot', () => {
-        const { asFragment } = render(getInstance())
-        expect(asFragment()).toMatchSnapshot()
-      })
-    })
-    `
+import React from 'react'
+import { render } from '@testing-library/react'
+
+import ${componentName} from '../${componentName}'
+
+const defaultProps = {}
+const getInstance = (props = {}) => <${componentName} {...defaultProps} {...props} />
+
+describe('${componentName}', () => {
+  it('matches snapshot', () => {
+    const { asFragment } = render(getInstance())
+    expect(asFragment()).toMatchSnapshot()
+  })
+})
+`
   )
 }
 

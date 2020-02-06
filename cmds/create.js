@@ -1,9 +1,10 @@
-const inquirer = require('inquirer');
+const inquirer = require('inquirer')
+const chalk = require('chalk')
 const fs = require('fs')
 const templates = require('../templates/react-template')
 
 const { formatComponentName } = require('../utils/stringFormat')
-const { MODULES_PATH } = require('../utils/constants')
+const { MODULES_PATH, TEMPLATES } = require('../utils/constants')
 
 const askComponentName = () => {
   const componentName = [{
@@ -37,15 +38,13 @@ const askPropType = async (inputs = []) => {
 
   let { again, ...answers } = await inquirer.prompt(prompts);
 
-  const defaultProps = resolveDefaultProp(answers.defaultProps)
+  const defaultProps = resolveDefaultProp(answers.propType)
 
   answers = { ...answers, defaultProps }
 
   const newInputs = [...inputs, answers];
   return again ? askPropType(newInputs) : newInputs;
 }
-
-
 
 const resolveDefaultProp = propType => {
   switch (propType) {
@@ -69,6 +68,22 @@ const resolveDefaultProp = propType => {
   }
 }
 
+const resolveTemplate = (template, formattedComponentName, props) => {
+  switch (template) {
+    case 'root':
+      return templates.componentTemplate(formattedComponentName, props)
+
+    case 'styles':
+      return templates.styleTemplate()
+
+    case 'test':
+      return templates.testTemplate(formattedComponentName)
+
+    default:
+      return templates.componentTemplate(formattedComponentName, props)
+  }
+}
+
 module.exports = async () => {
   try {
     const { componentName } = await askComponentName()
@@ -76,16 +91,16 @@ module.exports = async () => {
 
     const props = await askPropType()
 
-    fs.mkdirSync(`${MODULES_PATH}/${formattedComponentName}`, { recursive: true })
-    fs.writeFile(`${MODULES_PATH}/${formattedComponentName}/${formattedComponentName}.js`, templates.componentTemplate(formattedComponentName, props), () => console.log(`${formattedComponentName} has been successfully created !`))
+    TEMPLATES.map(({ folder, file, template }) => {
+      fs.mkdirSync(`${MODULES_PATH}/${formattedComponentName}${folder}`, { recursive: true })
+      fs.writeFileSync(
+        `${MODULES_PATH}/${formattedComponentName}${folder}${formattedComponentName}${file}`,
+        resolveTemplate(template, formattedComponentName, props),
+        { encoding: 'utf8' }
+      )
+    })
 
-    fs.mkdirSync(`${MODULES_PATH}/${formattedComponentName}/__test__`, { recursive: true })
-    fs.writeFile(`${MODULES_PATH}/${formattedComponentName}/__test__/${formattedComponentName}.test.js`, templates.testTemplate(formattedComponentName), () => console.log(`${formattedComponentName}/__test__/${formattedComponentName}.js has been successfully created !`))
-
-    fs.mkdirSync(`${MODULES_PATH}/${formattedComponentName}/__styles__`, { recursive: true })
-    fs.writeFile(`${MODULES_PATH}/${formattedComponentName}/__styles__/${formattedComponentName}.styles.js`, templates.styleTemplate(), () => console.log(`${formattedComponentName}/__styles__/${formattedComponentName}.js has been successfully created !`))
-
-
+    console.log(chalk.bgGreen.black(`Hooray! Component \`${formattedComponentName}\` has been successfully created`))
   } catch (err) {
     console.log(`Error during creation: ${err.message}`)
   }
